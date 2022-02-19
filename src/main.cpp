@@ -9,12 +9,30 @@ constexpr uint32 gridWidth  = 3;
 constexpr uint32 gridHeight = 3;
 constexpr size_t gridSpace  = 1;
 
+/**
+ * \brief Helps by specifying how the enemy should move towards its goal.
+ */
 enum EnemyDirection
 {
+    /**
+     * \brief The goal is above, its "y" coordinate should be decreased.
+     */
     UpDirection,
+    /**
+     * \brief The goal is bellow, its "y" coordinate should be increased.
+     */
     DownDirection,
+    /**
+     * \brief The goal is to the left, its "x" coordinate should be decreased.
+     */
     LeftDirection,
+    /**
+     * \brief The goal is to the right, its "x" coordinate should be increased.
+     */
     RightDirection,
+    /**
+     * \brief The goal reached.
+     */
     ReachedDestinationDirection,
 };
 
@@ -27,25 +45,24 @@ struct GamePoint
 struct Enemy
 {
     GamePoint location;
-    GamePoint* whereToGo;
+    GamePoint* whereToGoCheckpoint;
     uint32 checkPointIndex;
     EnemyDirection direction;
 };
 
-EnemyDirection ComputeDirection(GamePoint& currentLocation, GamePoint* whereToGo)
+EnemyDirection ComputeDirection(GamePoint& currentLocation, GamePoint* whereToGoCheckpoint)
 {
-    if (currentLocation.x < whereToGo->x)
+    if (currentLocation.x < whereToGoCheckpoint->x)
         return RightDirection;
-    if (currentLocation.x > whereToGo->x)
+    if (currentLocation.x > whereToGoCheckpoint->x)
         return LeftDirection;
-    if (currentLocation.y < whereToGo->y)
+    if (currentLocation.y < whereToGoCheckpoint->y)
         return DownDirection;
-    if (currentLocation.y > whereToGo->y)
+    if (currentLocation.y > whereToGoCheckpoint->y)
         return UpDirection;
     return ReachedDestinationDirection;
 }
 
-// We create
 class GameAreaPanel : public AppCUI::Controls::UserControl
 {
     uint32 currenLeft;
@@ -126,25 +143,17 @@ class GameAreaPanel : public AppCUI::Controls::UserControl
                   '#',
                   { Graphics::Color::White, Graphics::Color::Transparent });
         }
-
-        // remainingWidth = remainingWidth;
-        // AppCUI::Graphics::WriteTextParams params;
-        // params.Flags = AppCUI::Graphics::WriteTextFlags::SingleLine;
-        // params.X = currenLeft;
-        // params.Y = 0;
-        // params.Color = { AppCUI::Graphics::Color::White,AppCUI::Graphics::Color::Transparent };
-        // renderer.WriteText("asdasd", params);
     }
 
     void SpawnEnemy()
     {
         if (enemiesCount < enemiesMaxCount)
         {
-            enemies[enemiesCount].checkPointIndex = 0;
-            enemies[enemiesCount].location        = chcekPoints[0];
-            enemies[enemiesCount].whereToGo       = &chcekPoints[1];
+            enemies[enemiesCount].checkPointIndex     = 0;
+            enemies[enemiesCount].location            = chcekPoints[0];
+            enemies[enemiesCount].whereToGoCheckpoint = &chcekPoints[1];
             enemies[enemiesCount].direction =
-                  ComputeDirection(enemies[enemiesCount].location, enemies[enemiesCount].whereToGo);
+                  ComputeDirection(enemies[enemiesCount].location, enemies[enemiesCount].whereToGoCheckpoint);
             enemiesCount++;
         }
     }
@@ -158,19 +167,19 @@ class GameAreaPanel : public AppCUI::Controls::UserControl
             {
             case UpDirection:
                 enemy.location.y--;
-                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGo);
+                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGoCheckpoint);
                 break;
             case DownDirection:
                 enemy.location.y++;
-                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGo);
+                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGoCheckpoint);
                 break;
             case LeftDirection:
                 enemy.location.x--;
-                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGo);
+                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGoCheckpoint);
                 break;
             case RightDirection:
                 enemy.location.x++;
-                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGo);
+                enemy.direction = ComputeDirection(enemy.location, enemy.whereToGoCheckpoint);
                 break;
             case ReachedDestinationDirection:
                 if (++enemy.checkPointIndex == chcekPointsCount)
@@ -182,8 +191,8 @@ class GameAreaPanel : public AppCUI::Controls::UserControl
                 }
                 else
                 {
-                    enemy.whereToGo = &chcekPoints[enemy.checkPointIndex];
-                    enemy.direction = ComputeDirection(enemy.location, enemy.whereToGo);
+                    enemy.whereToGoCheckpoint = &chcekPoints[enemy.checkPointIndex];
+                    enemy.direction           = ComputeDirection(enemy.location, enemy.whereToGoCheckpoint);
                 }
                 break;
             }
@@ -192,9 +201,6 @@ class GameAreaPanel : public AppCUI::Controls::UserControl
 
     bool OnFrameUpdate() override
     {
-        auto height = GetHeight();
-        auto width  = GetWidth();
-
         UpdateEnemiesLocation();
 
         if (++frameCount == gridWidth + 3)
@@ -206,8 +212,9 @@ class GameAreaPanel : public AppCUI::Controls::UserControl
         return true;
     }
 };
-
-// The GameWindow type inherits the variables and methods from the AppCUI::Controls::SingleApp type
+/**
+ * \brief The GameWindow type inherits the variables and methods from the AppCUI::Controls::SingleApp type
+ */
 class GameWindow : public AppCUI::Controls::SingleApp
 {
   public:
@@ -219,7 +226,6 @@ class GameWindow : public AppCUI::Controls::SingleApp
     }
 };
 
-// Program entrypoint
 int main()
 {
     // Enable the application to run in FPSMode
