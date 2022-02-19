@@ -5,9 +5,9 @@ using namespace AppCUI::Application;
 using namespace AppCUI::Controls;
 using namespace AppCUI::Graphics;
 
-constexpr uint32 gridWidth = 3;
+constexpr uint32 gridWidth  = 3;
 constexpr uint32 gridHeight = 3;
-constexpr size_t gridSpace = 1;
+constexpr size_t gridSpace  = 1;
 
 enum EnemyDirection
 {
@@ -45,7 +45,7 @@ EnemyDirection ComputeDirection(GamePoint& currentLocation, GamePoint* whereToGo
     return ReachedDestinationDirection;
 }
 
-//We create 
+// We create
 class GameAreaPanel : public AppCUI::Controls::UserControl
 {
     uint32 currenLeft;
@@ -61,17 +61,17 @@ class GameAreaPanel : public AppCUI::Controls::UserControl
 
     uint32 frameCount;
 
-public:
-    GameAreaPanel(std::string_view layout) :UserControl(layout)
+  public:
+    GameAreaPanel(std::string_view layout) : UserControl(layout)
     {
-        currenLeft = 0;
-        enemiesCount = 0;
+        currenLeft      = 0;
+        enemiesCount    = 0;
         enemiesMaxCount = 10;
 
-        width = 0;
+        width  = 0;
         height = 0;
 
-        //not really ok. but we will fix this later
+        // not really ok. but we will fix this later
         chcekPointsCount = 5;
 
         frameCount = 0;
@@ -80,9 +80,9 @@ public:
     void OnStart() override
     {
         height = GetHeight();
-        width = GetWidth();
+        width  = GetWidth();
 
-        uint32 cellsPerWidth = width / gridWidth;
+        uint32 cellsPerWidth  = width / gridWidth;
         uint32 cellsPerHeight = height / gridHeight;
 
         chcekPoints[0].y = 0;
@@ -107,23 +107,33 @@ public:
 
         for (uint32 pIndex = 0; pIndex < chcekPointsCount; pIndex++)
         {
-            renderer.FillRect(chcekPoints[pIndex].x, chcekPoints[pIndex].y, chcekPoints[pIndex].x + gridWidth - 1, chcekPoints[pIndex].y + gridHeight - 1, '#', { Graphics::Color::Green, Graphics::Color::Transparent });
+            renderer.FillRect(
+                  chcekPoints[pIndex].x,
+                  chcekPoints[pIndex].y,
+                  chcekPoints[pIndex].x + gridWidth - 1,
+                  chcekPoints[pIndex].y + gridHeight - 1,
+                  '#',
+                  { Graphics::Color::Green, Graphics::Color::Transparent });
         }
 
         for (uint32 eIndex = 0; eIndex < enemiesCount; eIndex++)
         {
-            renderer.FillRect(enemies[eIndex].location.x, enemies[eIndex].location.y, enemies[eIndex].location.x + gridWidth - 1, enemies[eIndex].location.y + gridHeight - 1, '#', { Graphics::Color::White, Graphics::Color::Transparent });
+            renderer.FillRect(
+                  enemies[eIndex].location.x,
+                  enemies[eIndex].location.y,
+                  enemies[eIndex].location.x + gridWidth - 1,
+                  enemies[eIndex].location.y + gridHeight - 1,
+                  '#',
+                  { Graphics::Color::White, Graphics::Color::Transparent });
         }
 
-
-
-        //remainingWidth = remainingWidth;
-        //AppCUI::Graphics::WriteTextParams params;
-        //params.Flags = AppCUI::Graphics::WriteTextFlags::SingleLine;
-        //params.X = currenLeft;
-        //params.Y = 0;
-        //params.Color = { AppCUI::Graphics::Color::White,AppCUI::Graphics::Color::Transparent };
-        //renderer.WriteText("asdasd", params);
+        // remainingWidth = remainingWidth;
+        // AppCUI::Graphics::WriteTextParams params;
+        // params.Flags = AppCUI::Graphics::WriteTextFlags::SingleLine;
+        // params.X = currenLeft;
+        // params.Y = 0;
+        // params.Color = { AppCUI::Graphics::Color::White,AppCUI::Graphics::Color::Transparent };
+        // renderer.WriteText("asdasd", params);
     }
 
     void SpawnEnemy()
@@ -131,9 +141,10 @@ public:
         if (enemiesCount < enemiesMaxCount)
         {
             enemies[enemiesCount].checkPointIndex = 0;
-            enemies[enemiesCount].location = chcekPoints[0];
-            enemies[enemiesCount].whereToGo = &chcekPoints[1];
-            enemies[enemiesCount].direction = ComputeDirection(enemies[enemiesCount].location, enemies[enemiesCount].whereToGo);
+            enemies[enemiesCount].location        = chcekPoints[0];
+            enemies[enemiesCount].whereToGo       = &chcekPoints[1];
+            enemies[enemiesCount].direction =
+                  ComputeDirection(enemies[enemiesCount].location, enemies[enemiesCount].whereToGo);
             enemiesCount++;
         }
     }
@@ -182,7 +193,7 @@ public:
     bool OnFrameUpdate() override
     {
         auto height = GetHeight();
-        auto width = GetWidth();
+        auto width  = GetWidth();
 
         UpdateEnemiesLocation();
 
@@ -196,31 +207,35 @@ public:
     }
 };
 
-//The GameWindow type inherits the variables and methods from the AppCUI::Controls::SingleApp type
+// The GameWindow type inherits the variables and methods from the AppCUI::Controls::SingleApp type
 class GameWindow : public AppCUI::Controls::SingleApp
 {
-public:
+  public:
     GameWindow()
     {
-        //We create the PLayableArea by inheriting the UserControl "features" (methods / variables) -> we'll come back to this when we reach polymorphism
+        // We create the PLayableArea by inheriting the UserControl "features" (methods / variables) -> we'll come back
+        // to this when we reach polymorphism
         AddChildControl(std::make_unique<GameAreaPanel>("d:c"));
     }
 };
 
-//Program entrypoint
+// Program entrypoint
 int main()
 {
-    //Enable the application to run in FPSMode
-    if (!Application::Init(InitializationFlags::SingleWindowApp | InitializationFlags::Maximized |
-        InitializationFlags::EnableFPSMode))
+    // Enable the application to run in FPSMode
+    if (!Application::Init(
+              InitializationFlags::SingleWindowApp | InitializationFlags::Maximized |
+              InitializationFlags::EnableFPSMode))
         return 1;
 
-    //Running our app -> make_unique is generating a smart pointer that allocates an object of type GameWindow
-    //The param it needs is a "AppCUI::Controls::SingleApp" so we need an object that implementes the "features" from the type required
-    //  we create the type GameWindow. make_unique<GameWindow> is equivalent to: "new GameWindow()" (creating an instance of the class) and then deleting it when it runs out of scope
+    // Running our app -> make_unique is generating a smart pointer that allocates an object of type GameWindow
+    // The param it needs is a "AppCUI::Controls::SingleApp" so we need an object that implementes the "features" from
+    // the type required
+    //  we create the type GameWindow. make_unique<GameWindow> is equivalent to: "new GameWindow()" (creating an
+    //  instance of the class) and then deleting it when it runs out of scope
     RunSingleApp(std::make_unique<GameWindow>());
 
-    //Run the application (this is an infinite loop where events are interpreted)
+    // Run the application (this is an infinite loop where events are interpreted)
     Application::Run();
     return 0;
 }
