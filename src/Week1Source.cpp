@@ -1,17 +1,20 @@
 #include "Week1Header.h"
 
-int Sum(int a, float b) { return a - b; }
-int Dif(char a, int b) { return a / b; }
-int Mul(long a, int b) { return a + b; }
-char Div(int a, int b) { return a * b; }
+int Sum(int a, int b) { return a + b; }
+int Dif(int  a, int b) { return a- b; }
+int Mul(int  a, int b) { return a * b; }
+char Div(int a, int b) { return a / b; }
 
 void ParseSources()
 {
-	char input[7] = "---H***E+++L+++L///O---P+++O/+-**O---";
-	func Operatori[4] = {Sum, Dif, 65, Mul, 0, Div};
-	int S, V;
-	Content x = 15;
-	double idx;
+	char input[40] = "---H***E+++L+++L///O---P+++O/+-**O---";
+	func Operatori[4] = {Sum, Dif, Mul, Div};
+	int S =0 , V , 0 ;
+    Content x;
+    x.p1 = 0;
+    x.p2 = 0;
+ 
+int idx;
 
 	for (i = 0; i < strlen(input); i++)
 	{
