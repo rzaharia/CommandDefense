@@ -1,0 +1,3 @@
+[submodule "project/AppCUI"]
+	path = project/AppCUI
+	url = https://github.com/gdt050579/AppCUI
