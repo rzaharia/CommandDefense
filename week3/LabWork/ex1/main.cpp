@@ -1,3 +1,5 @@
+#include "canvas.h"
+
 int main() {
     Canvas canvas(10, 50);
     canvas.set_pixels(4, 4, 25, 124, 3, 33, 124, 2, 24, 95, 4, 3, 95);

@@ -18,10 +18,19 @@ a main.cpp file that shows how the methods and global functions can be used.
 
 */
 
+#include "GlobsalFunctions.h"
 
 int main()
 {
+    Wave w1, w2;
 
+	w1.SetName("W1");
+	w2.SetName("W2");
 
+	w1.SetNumberOfEnemies(2);
+	w2.SetNumberOfEnemies(20);
+
+	int res = CompareWavesNumberOfEnemies(w1, w2);
+    printf("%d", res);
     return 0;
 }
