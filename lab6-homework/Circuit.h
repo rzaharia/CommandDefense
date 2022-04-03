@@ -23,7 +23,7 @@ public :
 	void SetCarStats(Car& car); // set params for a given car 
 	void Race();
 	void ChangeWeather(Weather_Condition cond);
-    void Print_Cars(); //prints the 
+        void Print_Cars(); //prints the 
 	void ShowFinalRanks(); //show the final leaderboard 
 	void ShowWhoDidNotFinish();
 	};
